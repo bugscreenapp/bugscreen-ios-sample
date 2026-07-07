@@ -1,0 +1,22 @@
+# BugScreen API key — never commit
+Config/Secrets.xcconfig
+
+# macOS
+.DS_Store
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+xcuserdata/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+
+# Swift Package Manager
+.swiftpm/
+.build/
+
+# Xcode automatically-resolved package state (let it re-resolve on clone)
+BugScreenTravel.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
