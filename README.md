@@ -42,7 +42,7 @@ capture time; there is no runtime-permission code to write.
 The SDK is added as a Swift Package. `BugScreenTravel.xcodeproj` already references it:
 
 ```
-https://github.com/bugscreenapp/bugscreen-ios   —   Up to Next Major, from 1.7.0
+https://github.com/bugscreenapp/bugscreen-ios   —   Up to Next Major, from 1.8.0
 ```
 
 Xcode resolves and builds it on first open; no manual step needed.
