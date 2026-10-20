@@ -2,9 +2,9 @@
 //
 // The BugScreen API key is read from `Secrets.xcconfig` (git-ignored) so no key is ever
 // committed. We default it to empty here, then optionally include Secrets.xcconfig which
-// overrides it when present. A blank key still builds and runs — the report screen opens,
-// it just can't upload. Copy `Secrets.xcconfig.sample` to `Secrets.xcconfig` and paste your
-// key from the BugScreen console to enable uploads.
+// overrides it when present. A blank key still builds and runs the Travel app. A valid
+// app key is required to load reporter settings and upload reports. Copy
+// `Secrets.xcconfig.sample` to `Secrets.xcconfig` and add your key from the BugScreen console.
 //
 // `$(BUGSCREEN_API_KEY)` is surfaced into Info.plist (key `BugScreenAPIKey`) and read at
 // launch. This mirrors the Android sample's `local.properties` -> `BuildConfig` flow.
