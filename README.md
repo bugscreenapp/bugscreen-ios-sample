@@ -65,13 +65,14 @@ cp Config/Secrets.xcconfig.sample Config/Secrets.xcconfig
 #   BUGSCREEN_API_KEY = fb_your_api_key_here
 ```
 
-You can leave the key blank. The app still builds and runs, and the report screen still opens; you
-just can't upload reports.
+You can leave the key blank to build and browse the Travel app. Reporting needs a valid app key
+to load report settings and upload reports. With a blank or invalid key, the reporter shows a
+settings-loading error.
 
 ## Run it
 
 1. Open `BugScreenTravel.xcodeproj` in Xcode (latest stable). Let it resolve the Swift Package.
-2. Add your API key (optional — see above). Paste your key from the
+2. Add your API key for reporting (see above). Paste your key from the
    [BugScreen console](https://bugscreen.app).
 3. Pick an iOS 16+ simulator (or a device) and press **⌘R**.
 4. Try the headline flow: open the app and take a screenshot. In the Simulator that's
@@ -118,6 +119,5 @@ Info.plist                         # Photos usage string (#2) + BugScreenAPIKey
 - **No bundled photos.** Destination "images" are gradients generated from each place's category
   (see [`HeroImage.swift`](BugScreenTravel/Components/HeroImage.swift)), which keeps the repo small
   and free of image licensing.
-- **Uploads need a real key.** With a blank `BUGSCREEN_API_KEY` the report screen still opens; it
-  just can't submit. Add your `fb_...` key to `Config/Secrets.xcconfig` to see reports land in your
-  BugScreen console.
+- **Reporting needs a real key.** A blank or invalid `BUGSCREEN_API_KEY` cannot load report
+  settings. Add your `fb_...` key to `Config/Secrets.xcconfig` to open the form and submit reports.
