@@ -1,9 +1,10 @@
 import SwiftUI
 
-/// Profile: account header, stats, and settings groups. The "Help" group holds the single manual
-/// BugScreen entry point — everything else is automatic. Ported from `ProfileScreen.kt`.
+/// Account details, help, and BugScreen capture controls.
 struct ProfileView: View {
     @EnvironmentObject private var store: TravelStore
+    @State private var showRecordingStatus = false
+    @State private var recordingStatus = ""
 
     private var user: UserProfile { store.currentUser }
 
@@ -14,6 +15,9 @@ struct ProfileView: View {
                 statsCard
                 settingsSection
                 helpSection
+                if BugScreen.captureControlsAvailable {
+                    captureSection
+                }
                 aboutSection
             }
             .padding(20)
@@ -21,6 +25,11 @@ struct ProfileView: View {
         .frame(maxWidth: .infinity)
         .background(AppColor.background)
         .onAppear { BugScreen.screenViewed("profile") }
+        .alert("Recording status", isPresented: $showRecordingStatus) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(recordingStatus)
+        }
     }
 
     // MARK: Account header
@@ -89,8 +98,7 @@ struct ProfileView: View {
 
     private var helpSection: some View {
         SettingsGroup(title: "Help") {
-            // (5) The one manual BugScreen entry point. Everything else is automatic —
-            //     taking a screenshot anywhere in the app opens this same screen by itself.
+            // (5) Open the reporter directly from the app's Help section.
             SettingsRow(
                 icon: "ladybug",
                 title: "Report a problem",
@@ -110,6 +118,47 @@ struct ProfileView: View {
                 title: "Tip: take a screenshot",
                 subtitle: "Screenshot anywhere to report a bug instantly"
             )
+        }
+    }
+
+    private var captureSection: some View {
+        SettingsGroup(title: "BugScreen capture controls") {
+            SettingsRow(icon: "ladybug", title: "Show floating button", subtitle: "Open the SDK menu from any screen") {
+                BugScreen.setFloatingButtonVisible(true)
+            }
+            Divider().overlay(AppColor.outlineVariant)
+            SettingsRow(icon: "ladybug", title: "Hide floating button", subtitle: "Remove the floating menu") {
+                BugScreen.setFloatingButtonVisible(false)
+            }
+            Divider().overlay(AppColor.outlineVariant)
+            SettingsRow(icon: "video", title: "Start recent recording", subtitle: "Keep up to 15 seconds after system consent") {
+                BugScreen.setRecordingEnabled(true)
+            }
+            Divider().overlay(AppColor.outlineVariant)
+            SettingsRow(icon: "stop.circle", title: "Stop recent recording", subtitle: "Stop capture and clear recent history") {
+                BugScreen.setRecordingEnabled(false)
+            }
+            Divider().overlay(AppColor.outlineVariant)
+            SettingsRow(icon: "info.circle", title: "Check recording status", subtitle: "Read the current state from the SDK") {
+                recordingStatus = BugScreen.recordingStatus()
+                showRecordingStatus = true
+            }
+            Divider().overlay(AppColor.outlineVariant)
+            SettingsRow(icon: "bell", title: "Show report notification", subtitle: "Allow notifications when asked") {
+                BugScreen.setReportNotificationVisible(true)
+            }
+            Divider().overlay(AppColor.outlineVariant)
+            SettingsRow(icon: "bell.slash", title: "Hide report notification", subtitle: "Remove the reporting shortcut") {
+                BugScreen.setReportNotificationVisible(false)
+            }
+            Divider().overlay(AppColor.outlineVariant)
+            SettingsRow(icon: "iphone", title: "Enable shake-to-report", subtitle: "Shake while the app is open to report") {
+                BugScreen.setShakeDetectionEnabled(true)
+            }
+            Divider().overlay(AppColor.outlineVariant)
+            SettingsRow(icon: "iphone", title: "Disable shake-to-report", subtitle: "Turn off the motion shortcut") {
+                BugScreen.setShakeDetectionEnabled(false)
+            }
         }
     }
 
