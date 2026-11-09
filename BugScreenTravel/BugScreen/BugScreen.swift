@@ -30,7 +30,11 @@ enum BugScreen {
             BugScreenSDK.configure(
                 apiKey: apiKey,
                 enableScreenshotDetection: true,
-                debug: true
+                enableShakeDetection: false,
+                debug: true,
+                captureSystemLogs: true,
+                screenRecordingOptions: .init(durationSeconds: 15, quality: .balanced),
+                showFloatingButton: true
             )
         #endif
     }
@@ -57,6 +61,56 @@ enum BugScreen {
     static func presentReport() {
         #if DEBUG
             BugScreenSDK.presentBugReport()
+        #endif
+    }
+
+    // MARK: - (6) Capture controls
+
+    static var captureControlsAvailable: Bool {
+        #if DEBUG
+            BugScreenSDK.isConfigured
+        #else
+            false
+        #endif
+    }
+
+    static func setFloatingButtonVisible(_ visible: Bool) {
+        #if DEBUG
+            if visible { BugScreenSDK.showFloatingButton() } else { BugScreenSDK.hideFloatingButton() }
+            log("floating_button_visible: \(visible)", level: .info)
+        #endif
+    }
+
+    static func setRecordingEnabled(_ enabled: Bool) {
+        #if DEBUG
+            if enabled { BugScreenSDK.startScreenRecording() } else { BugScreenSDK.stopScreenRecording() }
+            log("recording_requested: \(enabled)", level: .info)
+        #endif
+    }
+
+    static func recordingStatus() -> String {
+        #if DEBUG
+            let state = BugScreenSDK.screenRecordingState
+            if case let .unavailable(reason) = state {
+                return "Unavailable (\(reason.rawValue))"
+            }
+            return String(describing: state)
+        #else
+            "Unavailable"
+        #endif
+    }
+
+    static func setReportNotificationVisible(_ visible: Bool) {
+        #if DEBUG
+            if visible { BugScreenSDK.showReportNotification() } else { BugScreenSDK.hideReportNotification() }
+            log("report_notification_requested: \(visible)", level: .info)
+        #endif
+    }
+
+    static func setShakeDetectionEnabled(_ enabled: Bool) {
+        #if DEBUG
+            BugScreenSDK.setShakeDetectionEnabled(enabled)
+            log("shake_detection_enabled: \(enabled)", level: .info)
         #endif
     }
 

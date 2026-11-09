@@ -2,7 +2,7 @@
 
 A reference for wiring the [BugScreen](https://bugscreen.app) bug-reporting SDK into an iOS app.
 If you're evaluating BugScreen or setting it up for the first time, this repo shows every
-integration point in a working app. Copy the five spots below and you have a full integration.
+integration point in a working app. Use the integration points below to wire up the SDK.
 
 A tester takes a screenshot anywhere in the app and the report screen opens. Reports include
 device info, your custom data, and a breadcrumb log. Testers never leave the app.
@@ -31,6 +31,7 @@ the rest of the app reads like a normal app and never imports the SDK directly.
 | 3 | Attach user / session context | [`BugScreenTravelApp.swift`](BugScreenTravel/App/BugScreenTravelApp.swift) → `BugScreen.identify(_:sessionId:)` (`BugScreenSDK.setCustomData`) |
 | 4 | Log breadcrumbs at meaningful events | [`BugScreen.swift`](BugScreenTravel/BugScreen/BugScreen.swift) (`BugScreenSDK.log`) — called from each screen's `.onAppear` and the save action |
 | 5 | Manual "Report a problem" entry point | [`ProfileView.swift`](BugScreenTravel/Screens/ProfileView.swift) → `BugScreen.presentReport()` (`BugScreenSDK.presentBugReport`) |
+| 6 | Exercise capture controls | [`ProfileView.swift`](BugScreenTravel/Screens/ProfileView.swift) → [`BugScreen.swift`](BugScreenTravel/BugScreen/BugScreen.swift) |
 
 Automatic screenshot detection needs no wiring beyond step 1; it's on by default. When a tester
 takes a screenshot, the SDK reads it from the Photos library and opens the report screen — which is
@@ -42,7 +43,7 @@ capture time; there is no runtime-permission code to write.
 The SDK is added as a Swift Package. `BugScreenTravel.xcodeproj` already references it:
 
 ```
-https://github.com/bugscreenapp/bugscreen-ios   —   Up to Next Major, from 1.8.0
+https://github.com/bugscreenapp/bugscreen-ios   —   Up to Next Major, from 1.9.0
 ```
 
 Xcode resolves and builds it on first open; no manual step needed.
@@ -81,6 +82,26 @@ settings-loading error.
 
 > **Deployment target:** iOS 16.0 (the app uses `NavigationStack` and the `Layout` protocol). The
 > SDK itself supports iOS 15+.
+
+## Try the BugScreen 1.9 controls
+
+In a Debug build, open **Profile → BugScreen capture controls**. Use a physical device to try
+shake-to-report and recording.
+
+- **Floating button.** Tap the floating BugScreen button to open its menu. Use **Hide floating
+  button** and **Show floating button** to change its visibility.
+- **Recent recording.** Select **Start recent recording**, then approve the system prompt.
+  **Check recording status** reads the current state from the SDK. Reproduce the issue and open
+  the reporter while recording to attach up to 15 seconds of recent video. **Stop recent
+  recording** clears the rolling buffer.
+- **Report notification.** Select **Show report notification** and allow notifications when
+  asked. Open Notification Center over the app and tap the BugScreen notification. Use **Hide
+  report notification** to remove the shortcut.
+- **Shake-to-report.** Select **Enable shake-to-report**, then deliberately shake the device
+  while the app is open. **Disable shake-to-report** turns the shortcut off.
+
+[`BugScreen.swift`](BugScreenTravel/BugScreen/BugScreen.swift) opts in to attaching available
+app-process logs. Keep secrets and personal data out of logs when testing reports.
 
 ## The demo app
 
